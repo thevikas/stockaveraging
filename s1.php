@@ -1,7 +1,7 @@
 <?php
 #201708261926:Kovai:thevikas:Starting today
 #market rate
-$MR0 = $MR = 16.35;
+$MR0 = $MR = 16.15;
 #old average share price
 $ASP1 = 55.03;
 #old shares held
@@ -36,6 +36,7 @@ function display()
 {
     global $ASP1, $ASP2, $SH, $MR, $SB;
     $SH2 = $SB + $SH;
+    $ASP2 = (($SB*$MR)+($SH*$ASP1))/$SH2;
     echo sprintf("%12d | %6d | %8.2f | Rs. %9.2f | %5.0f %% | %6d\n",$ASP2, $SB,$MR,$MR*$SB, (100*($ASP1-$ASP2)/$ASP1),$SH2);
 }
 
