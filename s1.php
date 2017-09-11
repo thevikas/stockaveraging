@@ -1,46 +1,49 @@
 <?php
+require_once('lib.php');
 
+$opts = getopt('r::',['ratefile::']);
+$mrfilename = "market-rate.txt";
+
+if($opts == false || isset($opts['h']))
+{
+    echo "Usage: s1.php [-r 17.10]\n";
+    echo "-r\tRates comma seperated - current market rate, old average rate, shares held currently\n";
+    echo "--ratefile\tMarket rate file (default: market-rate.txt)\n";
+    echo "\n";
+    return;
+}
+
+if(!empty($opts['ratefile']))
+{
+    $mrfilename = $opts['f'];
+}
+
+if(empty($opts['r']))
+{
+    print "Loading from previous values\n";
+    list($MR,$ASP1,$SH) = explode(',',trim(file_get_contents($mrfilename)));
+}
+else
+{
+    print "Loading from command line\n";
+    list($MR,$ASP1,$SH) = explode(',',trim($opts['r']));
+    if($MR>0 && $ASP1>0 && $SH>0);
+    else
+    {
+        print "Values incorect? ($MR,$ASP1,$SH)\n";
+        return;
+    }
+    file_put_contents($mrfilename,implode(',',[$MR,$ASP1,$SH]));
+}
+
+print "MR=$MR, ASP1=$ASP1, SH=$SH, ratefile=$mrfilename\n";
 // 201708261926:Kovai:thevikas:Starting today
 // market rate
-$MR0 = $MR = 16.15;
+$MR0 = $MR;
 // old average share price
-$ASP1 = 55.03;
 // old shares held
-$SH = 3122;
 // new shares bought
 $SB = 0;
-
-function set1()
-{
-    global $ASP1, $ASP2, $SH, $MR, $SB;
-    // show 5 options of price APP price drop with 5 rs each
-    $m = intval ( $ASP1 / 5 );
-    echo "Target Price |   Buy  | Buy Rate | Money Needed | Reduction % | Total Held\n";
-    echo "------------     ---    --------   ------------   -----------   ----------\n";
-    for($i = 0; $i < 5; $i ++)
-    {
-        $ASP2 = ($m - $i) * 5;
-        aspcalc ();
-    }
-    $ASP2 = $ASP1 * .5;
-    aspcalc ();
-}
-
-function aspcalc()
-{
-    global $ASP1, $ASP2, $SH, $MR, $SB;
-    $SB = round ( ($ASP2 * $SH - $SH * $ASP1) / ($MR - $ASP2) );
-    display ();
-}
-
-function display()
-{
-    global $ASP1, $ASP2, $SH, $MR, $SB;
-    $SH2 = $SB + $SH;
-    $ASP2 = (($SB * $MR) + ($SH * $ASP1)) / $SH2;
-    echo sprintf ( "%12d | %6d | %8.2f | Rs. %9.2f | %5.0f %% | %6d\n", $ASP2, $SB, $MR, $MR * $SB, 
-            (100 * ($ASP1 - $ASP2) / $ASP1), $SH2 );
-}
 
 set1 ();
 $SB = 5000 - $SH;
@@ -49,19 +52,10 @@ $SB = 10000 - $SH;
 display ();
 
 $MR = $MR0 * (1 - 0.05);
-echo "\nIf market price was lower by 5 %\n";
-set1 ();
-$SB = 5000 - $SH;
-display ();
-$SB = 10000 - $SH;
-display ();
+whatif("If market price was lower by 5 %");
 
-echo "\nIf market price was higher by 5%\n";
 $MR = $MR0 * (1.05);
-set1 ();
-$SB = 5000 - $SH;
-display ();
-$SB = 10000 - $SH;
-display ();
+whatif("If market price was higher by 5%");
+
 
 ?>
