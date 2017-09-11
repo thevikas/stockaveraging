@@ -1,5 +1,6 @@
 <?php
 
+//writes a new table with header
 function set1()
 {
     global $ASP1, $ASP2, $SH, $MR, $SB;
@@ -16,6 +17,7 @@ function set1()
     aspcalc ();
 }
 
+//pre calculates 1 row of data to formula in display can work
 function aspcalc()
 {
     global $ASP1, $ASP2, $SH, $MR, $SB;
@@ -23,6 +25,7 @@ function aspcalc()
     display ();
 }
 
+//calculates based on fixed formula and displayes 1 row of data
 function display()
 {
     global $ASP1, $ASP2, $SH, $MR, $SB;
@@ -34,13 +37,21 @@ function display()
 
 function whatif($title)
 {
-    global $SH,$SB;
+    global $SH,$SB,$MR;
     echo "\n$title\n";
     set1 ();
     $SB = 5000 - $SH;
     display ();
     $SB = 10000 - $SH;
     display ();
+    $SB = 5000/$MR;
+    display();
+    $SB = 10000/$MR;
+    display();
+    $SB = 15000/$MR;
+    display();
+    $SB = 20000/$MR;
+    display();
 }
 
  ?>

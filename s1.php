@@ -4,7 +4,7 @@ require_once('lib.php');
 $opts = getopt('r::',['ratefile::']);
 $mrfilename = "market-rate.txt";
 
-if($opts == false || isset($opts['h']))
+if(isset($opts['h']))
 {
     echo "Usage: s1.php [-r 17.10]\n";
     echo "-r\tRates comma seperated - current market rate, old average rate, shares held currently\n";
@@ -45,11 +45,7 @@ $MR0 = $MR;
 // new shares bought
 $SB = 0;
 
-set1 ();
-$SB = 5000 - $SH;
-display ();
-$SB = 10000 - $SH;
-display ();
+whatif("At current market price");
 
 $MR = $MR0 * (1 - 0.05);
 whatif("If market price was lower by 5 %");
